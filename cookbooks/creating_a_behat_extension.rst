@@ -26,7 +26,7 @@ The ``LogsExtension`` will provide a ``LogsContext`` that hooks into scenarios t
 Directory structure:
 
 .. code-block::
-  
+
   src/
       Context/
           LogsContext.php   # This is where we'll implement our logging logic
@@ -37,13 +37,13 @@ The code for ``LogsContext.php``:
 .. code-block:: php
 
   <?php
-  
-  namespace Behat\LogsExtension\Context;
-  
+
+  namespace LogsExtension\Context;
+
   use Behat\Behat\Context\Context;
   use Behat\Behat\Hook\Scope\BeforeScenarioScope;
   use Behat\Behat\Hook\Scope\AfterScenarioScope;
-  
+
   class LogsContext implements Context
   {
       /** @BeforeScenario */
@@ -59,14 +59,14 @@ The code for ``LogsContext.php``:
               FILE_APPEND
           );
       }
-  
+
       /** @AfterScenario */
       public function after(AfterScenarioScope $scope)
       {
           if (/* enable config */ === false) {
               return;
           }
-  
+
           file_put_contents(
               /* filepath */,
               'END: ' . $scope->getScenario()->getTitle() . ' - ' . time() . PHP_EOL,
@@ -84,7 +84,7 @@ This will serve as the entry point for our logging functionality.
 Directory structure:
 
 .. code-block::
-  
+
   src/
       Context/
           LogsContext.php
@@ -99,23 +99,23 @@ The ``getConfigKey`` method is used to identify our extension in the configurati
 The code for ``LogsExtension.php``:
 
 .. code-block:: php
-  
+
   <?php
-  
-  namespace Behat\LogsExtension\ServiceContainer;
-  
+
+  namespace LogsExtension\ServiceContainer;
+
   use Behat\Testwork\ServiceContainer\Extension;
   use Behat\Testwork\ServiceContainer\ExtensionManager;
   use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
   use Symfony\Component\DependencyInjection\ContainerBuilder;
-  
+
   class LogsExtension implements Extension
   {
       public function getConfigKey()
       {
           return 'logs_extension';
       }
-  
+
       public function initialize(ExtensionManager $extensionManager)
       {
           // Empty for our case, but useful to hook into other extensions' configurations
@@ -126,12 +126,12 @@ The code for ``LogsExtension.php``:
           $builder
               ->addDefaultsIfNotSet()
               ->children()
-                  ->scalarNode('enable')->defaultFalse()->end()
+                  ->booleanNode('enable')->defaultFalse()->end()
                   ->scalarNode('filepath')->defaultValue('behat.log')->end()
               ->end()
           ;
       }
-  
+
       public function load(ContainerBuilder $container, array $config)
       {
           // ... we'll load our configuration here
@@ -144,7 +144,7 @@ The code for ``LogsExtension.php``:
   }
 
 .. note::
-  
+
   The ``initialize`` and ``process`` methods are empty in our case but are useful when you need to interact with other extensions or process the container after it has been compiled.
 
 Initializing the Context
@@ -169,7 +169,7 @@ The code for ``LogsInitializer.php``:
 
   <?php
 
-  namespace Behat\LogsExtension\Context\Initializer;
+  namespace LogsExtension\Context\Initializer;
 
   use Behat\LogsExtension\Context\LogsContext;
   use Behat\Behat\Context\Context;
@@ -179,19 +179,19 @@ The code for ``LogsInitializer.php``:
   {
       private string $filepath;
       private bool $enable;
-  
+
       public function __construct(string $filepath, bool $enable)
       {
           $this->filepath = $filepath;
           $this->enable = $enable;
       }
-  
+
       public function initializeContext(Context $context)
       {
-          /* 
+          /*
            * At the start of every scenario, behat will create a new instance of every `Context`
            * registered in your project. It will then call this method with each new `Context` in
-           * turn. If you want to initialise multiple contexts, you can of course give them an 
+           * turn. If you want to initialise multiple contexts, you can of course give them an
            * interface and check for that here.
            */
           if (!$context instanceof LogsContext) {
@@ -216,7 +216,7 @@ We need to register the initializer definition within the Behat container throug
   class LogsExtension implements Extension
   {
       // ...
-  
+
       public function load(ContainerBuilder $container, array $config)
       {
           $definition = new Definition(LogsInitializer::class, [
@@ -235,18 +235,18 @@ To complete the extension, we must add methods to ``LogsContext`` to receive the
 .. code-block:: php
 
   // ...
-  
+
   class LogsContext implements Context
   {
       private bool $enable = false;
       private string $filepath;
-  
+
       public function initializeConfig(bool $enable, string $filepath)
       {
           $this->enable = $enable;
           $this->filepath = $filepath;
       }
-  
+
       /** @BeforeScenario */
       public function before(BeforeScenarioScope $scope)
       {
@@ -260,14 +260,14 @@ To complete the extension, we must add methods to ``LogsContext`` to receive the
               FILE_APPEND
           );
       }
-  
+
       /** @AfterScenario */
       public function after(AfterScenarioScope $scope)
       {
           if ($this->enable === false) {
               return;
           }
-  
+
           file_put_contents(
               $this->filepath,
               'END: ' . $scope->getScenario()->getTitle() . ' - ' . time() . PHP_EOL,
