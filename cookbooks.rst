@@ -6,3 +6,4 @@ Cookbooks
 
    cookbooks/integrating_symfony2_with_behat
    cookbooks/accessing_contexts_from_each_other
+   cookbooks/custom_formatter
