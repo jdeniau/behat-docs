@@ -278,6 +278,6 @@ Conclusion
 
 Congratulations! You have just created a simple Behat extension that logs scenario durations. This extension demonstrates the three essential steps to building a Behat extension: defining an extension, creating an initializer, and configuring contexts.
 
-Feel free to experiment with this extension and expand its functionality. For further learning, check out the `Behat hooks documentation <https://behat.org/en/latest/user_guide/context/hooks.html>`_ and explore existing extensions on `GitHub <https://github.com/search?o=desc&q=behat+extension+in%3Aname%2Cdescription+language%3APHP&ref=searchresults&s=stars&type=Repositories>`_.
+Feel free to experiment with this extension and expand its functionality. For further learning, check out the :doc:`Behat hooks documentation</user_guide/context/hooks>` and explore existing extensions on `GitHub <https://github.com/search?o=desc&q=behat+extension+in%3Aname%2Cdescription+language%3APHP&ref=searchresults&s=stars&type=Repositories>`_.
 
 Happy testing!
