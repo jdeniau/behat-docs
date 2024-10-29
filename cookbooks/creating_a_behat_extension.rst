@@ -12,7 +12,14 @@ In this cookbook, we will create a simple extension named ``LogsExtension`` that
 Setting Up the Context
 ----------------------
 
-First, we need to create a context that will handle the logging.
+First, we need to create a class that will handle the logging. There are several ways to do this (you can hook
+directly into behat's event dispatcher, for example).
+
+For our case, we will create a `Context` and use the :doc:`normal tagged hooks</user_guide/context/hooks>`
+that you might have used in your own contexts.
+
+This is a straightforward approach, and means we can also show how to initialise any context with custom
+configuration or dependencies.
 The ``LogsExtension`` will provide a ``LogsContext`` that hooks into scenarios to log their start and end times.
 
 Directory structure:
