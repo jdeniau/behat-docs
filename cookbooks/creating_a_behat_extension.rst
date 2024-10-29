@@ -8,6 +8,7 @@ In this cookbook, we will create a simple extension named ``LogsExtension`` that
 #. Setting up the context
 #. Creating the extension
 #. Initializing the context
+#. Using the extension
 
 Setting Up the Context
 ----------------------
@@ -274,6 +275,32 @@ To complete the extension, we must add methods to ``LogsContext`` to receive the
           );
       }
   }
+
+Using the extension
+-------------------
+
+Now that the extension is ready and will inject values into context, we just need to configure it into a project.
+
+In the ``extensions`` key of a profile (``default`` in our case), we'll add the ``LogsExtension`` key and configure our ``filepath`` and ``enable`` value.
+
+Finally, we need to load the ``LogsExtension\Context\LogsContext`` into our suite.
+As the steps are hooked onto scenarios events, the context will be automatically called everytime a scenario starts or ends.
+
+Here's the ``behat.yaml``:
+
+.. code-block:: yaml
+
+  default:
+    suites:
+      default:
+        contexts:
+          - FeatureContext
+          - LogsExtension\Context\LogsContext
+    extensions:
+      LogsExtension:
+        filepath: 'logs.txt'
+        enable: true
+
 
 Conclusion
 ----------
