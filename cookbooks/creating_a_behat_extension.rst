@@ -186,6 +186,12 @@ The code for ``LogsInitializer.php``:
   
       public function initializeContext(Context $context)
       {
+          /* 
+           * At the start of every scenario, behat will create a new instance of every `Context`
+           * registered in your project. It will then call this method with each new `Context` in
+           * turn. If you want to initialise multiple contexts, you can of course give them an 
+           * interface and check for that here.
+           */
           if (!$context instanceof LogsContext) {
               return;
           }
