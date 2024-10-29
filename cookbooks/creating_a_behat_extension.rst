@@ -15,7 +15,7 @@ Setting Up the Context
 First, we need to create a class that will handle the logging. There are several ways to do this (you can hook
 directly into behat's event dispatcher, for example).
 
-For our case, we will create a `Context` and use the :doc:`normal tagged hooks</user_guide/context/hooks>`
+For our case, we will create a ``Context`` and use the :doc:`normal tagged hooks</user_guide/context/hooks>`
 that you might have used in your own contexts.
 
 This is a straightforward approach, and means we can also show how to initialise any context with custom
@@ -90,12 +90,12 @@ Directory structure:
       ServiceContainer/
           LogsExtension.php   # This is where we'll define our extension
 
-To ensure Behat can find and load the ``LogsExtension.php`` file, it is important to place it within the `ServiceContainer` folder.
+To ensure Behat can find and load the ``LogsExtension.php`` file, it is important to place it within the ``ServiceContainer`` folder.
 While there might be alternatives, we will stick to the straightforward method.
 
 The ``getConfigKey`` method is used to identify our extension in the configuration, and the ``configure`` method is used to define the configuration tree.
 
-The code for `LogsExtension.php`:
+The code for ``LogsExtension.php``:
 
 .. code-block:: php
   
@@ -164,7 +164,8 @@ Directory structure:
 
 The code for ``LogsInitializer.php``:
 
-.. code-block:: php  
+.. code-block:: php
+
   <?php
 
   namespace Behat\LogsExtension\Context\Initializer;
@@ -203,6 +204,7 @@ The code for ``LogsInitializer.php``:
 We need to register the initializer definition within the Behat container through the ``LogsExtension``, ensuring it gets loaded:
 
 .. code-block:: php
+
   <?php
 
   // ...
