@@ -3,7 +3,7 @@ Creating a Behat extension
 
 Extensions are particularly useful when configuration becomes a necessity.
 
-In this cookbook, we will create a simple extension named ``LogsExtension`` that logs scenario durations and cover:
+In this cookbook, we will create a simple extension named ``HelloWorld`` that will display some text and cover:
 
 #. Setting up the context
 #. Creating the extension
@@ -13,123 +13,100 @@ In this cookbook, we will create a simple extension named ``LogsExtension`` that
 Setting Up the Context
 ----------------------
 
-First, we need to create a class that will handle the logging. There are several ways to do this (you can hook
-directly into behat's event dispatcher, for example).
-
-For our case, we will create a ``Context`` and use the :doc:`normal tagged hooks</user_guide/context/hooks>`
-that you might have used in your own contexts.
-
-This is a straightforward approach, and means we can also show how to initialise any context with custom
-configuration or dependencies.
-The ``LogsExtension`` will provide a ``LogsContext`` that hooks into scenarios to log their start and end times.
-
-Directory structure:
+First, we need to create a ``Context`` class that will throw a ``PendingException`` with a configurable text.
+A behavior that could be enable or not.
 
 .. code-block::
 
   src/
       Context/
-          LogsContext.php   # This is where we'll implement our logging logic
+          HelloWorldContext.php   # This is where we'll implement our step
 
-
-The code for ``LogsContext.php``:
 
 .. code-block:: php
 
   <?php
 
-  namespace LogsExtension\Context;
+  namespace HelloWorld\Context;
 
-  use Behat\Behat\Context\Context;
-  use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-  use Behat\Behat\Hook\Scope\AfterScenarioScope;
+  use Behat\Behat\Context\Context as BehatContext;
+  use Behat\Behat\Tester\Exception\PendingException;
 
-  class LogsContext implements Context
+  class HelloWorldContext implements BehatContext
   {
-      /** @BeforeScenario */
-      public function before(BeforeScenarioScope $scope)
-      {
-          if (/* enable config */ === false) {
-              return;
-          }
+      private bool $enable = false;
+      private string $text;
 
-          file_put_contents(
-              /* filepath */,
-              'START: ' . $scope->getScenario()->getTitle() . ' - ' . time() . PHP_EOL,
-              FILE_APPEND
-          );
+      public function initializeConfig(bool $enable, string $text)
+      {
+          $this->enable = $enable;
+          $this->text = $text;
       }
 
-      /** @AfterScenario */
-      public function after(AfterScenarioScope $scope)
+      /** @Given I say Hello World */
+      public function helloWorld()
       {
-          if (/* enable config */ === false) {
-              return;
+          if ($this->enable) {
+            throw new PendingException($this->text);
           }
-
-          file_put_contents(
-              /* filepath */,
-              'END: ' . $scope->getScenario()->getTitle() . ' - ' . time() . PHP_EOL,
-              FILE_APPEND
-          );
       }
   }
 
 Creating the Extension
 ----------------------
 
-Next, we need to create the extension itself.
-This will serve as the entry point for our logging functionality.
-
-Directory structure:
+Next, we need to create the entry point for our Hello World, the extension itself.
 
 .. code-block::
 
   src/
       Context/
-          LogsContext.php
+          HelloWorldContext.php
       ServiceContainer/
-          LogsExtension.php   # This is where we'll define our extension
+          HelloWorldExtension.php   # This is where we'll define our extension
 
-To ensure Behat can find and load the ``LogsExtension.php`` file, it is important to place it within the ``ServiceContainer`` folder.
-While there might be alternatives, we will stick to the straightforward method.
-
-The ``getConfigKey`` method is used to identify our extension in the configuration, and the ``configure`` method is used to define the configuration tree.
-
-The code for ``LogsExtension.php``:
+The ``getConfigKey`` method below is used to identify our extension in the configuration.
+The ``configure`` method is used to define the configuration tree.
 
 .. code-block:: php
 
   <?php
 
-  namespace LogsExtension\ServiceContainer;
+  namespace HelloWorld\ServiceContainer;
 
+  use Behat\Behat\Context\ServiceContainer\ContextExtension;
   use Behat\Testwork\ServiceContainer\Extension;
   use Behat\Testwork\ServiceContainer\ExtensionManager;
   use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
   use Symfony\Component\DependencyInjection\ContainerBuilder;
+  use Symfony\Component\DependencyInjection\Definition;
+  use HelloWorld\Context\Initializer\HelloWorldInitializer;
 
-  class LogsExtension implements Extension
+  class HelloWorldExtension implements Extension
   {
       public function getConfigKey()
       {
-          return 'logs_extension';
+          return 'helloworld_extension';
       }
 
+      /**
+       * Called after extensions activation, but before `configure()`.
+       * Used to hook into other extensions' configuration.
+       */
       public function initialize(ExtensionManager $extensionManager)
       {
-          // Empty for our case, but useful to hook into other extensions' configurations
+          // emtpy for our case
       }
 
       public function configure(ArrayNodeDefinition $builder)
       {
           $builder
               ->addDefaultsIfNotSet()
-              ->children()
-                  ->booleanNode('enable')->defaultFalse()->end()
-                  ->scalarNode('filepath')->defaultValue('behat.log')->end()
-              ->end()
-          ;
+                  ->children()
+                      ->booleanNode('enable')->defaultFalse()->end()
+                      ->scalarNode('text')->defaultValue('Hello World!')->end()
+                  ->end()
+              ->end();
       }
 
       public function load(ContainerBuilder $container, array $config)
@@ -137,9 +114,9 @@ The code for ``LogsExtension.php``:
           // ... we'll load our configuration here
       }
 
+      // needed as Extension interface implements CompilerPassInterface
       public function process(ContainerBuilder $container)
       {
-          // Empty for our case but needed for CompilerPassInterface
       }
   }
 
@@ -150,39 +127,37 @@ The code for ``LogsExtension.php``:
 Initializing the Context
 ------------------------
 
-To pass configuration values to our ``LogsContext``, we need to create an initializer.
-
-Directory structure:
+To pass configuration values to our ``HelloWorldContext``, we need to create an initializer.
 
 .. code-block::
   src/
       Context/
           Initializer/
-              LogsInitializer.php   # This will handle context initialization
-          LogsContext.php
+              HelloWorldInitializer.php   # This will handle context initialization
+            HelloWorldContext.php
       ServiceContainer/
-          LogsExtension.php
+        HelloWorldExtension.php
 
-The code for ``LogsInitializer.php``:
+The code for ``HelloWorldInitializer.php``:
 
 .. code-block:: php
 
   <?php
 
-  namespace LogsExtension\Context\Initializer;
+  namespace HelloWorld\Context\Initializer;
 
-  use Behat\LogsExtension\Context\LogsContext;
+  use HelloWorld\Context\HelloWorldContext;
   use Behat\Behat\Context\Context;
   use Behat\Behat\Context\Initializer\ContextInitializer;
 
-  class LogsInitializer implements ContextInitializer
+  class HelloWorldInitializer implements ContextInitializer
   {
-      private string $filepath;
+      private string $text;
       private bool $enable;
 
-      public function __construct(string $filepath, bool $enable)
+      public function __construct(string $text, bool $enable)
       {
-          $this->filepath = $filepath;
+          $this->text = $text;
           $this->enable = $enable;
       }
 
@@ -194,15 +169,15 @@ The code for ``LogsInitializer.php``:
            * turn. If you want to initialise multiple contexts, you can of course give them an
            * interface and check for that here.
            */
-          if (!$context instanceof LogsContext) {
+          if (!$context instanceof HelloWorldContext) {
               return;
           }
 
-          $context->initializeConfig($this->enable, $this->filepath);
+          $context->initializeConfig($this->enable, $this->text);
       }
   }
 
-We need to register the initializer definition within the Behat container through the ``LogsExtension``, ensuring it gets loaded:
+We need to register the initializer definition within the Behat container through the ``HelloWorldExtension``, ensuring it gets loaded:
 
 .. code-block:: php
 
@@ -213,66 +188,48 @@ We need to register the initializer definition within the Behat container throug
   use Symfony\Component\DependencyInjection\Definition;
   use Behat\Behat\Context\ServiceContainer\ContextExtension;
 
-  class LogsExtension implements Extension
+  class HelloWorldExtension implements Extension
   {
       // ...
 
       public function load(ContainerBuilder $container, array $config)
       {
-          $definition = new Definition(LogsInitializer::class, [
-              $config['filepath'],
+          $definition = new Definition(HelloWorldInitializer::class, [
+              $config['text'],
               $config['enable'],
           ]);
           $definition->addTag(ContextExtension::INITIALIZER_TAG);
-          $container->setDefinition('logs_extension.context_initializer', $definition);
+          $container->setDefinition('helloworld_extension.context_initializer', $definition);
       }
 
       // ...
   }
 
-To complete the extension, we must add methods to ``LogsContext`` to receive the configuration values and use those in the hooks:
+To complete the extension, we must add methods to ``HelloWorldContext`` to receive the configuration values and use those in the hooks:
 
 .. code-block:: php
 
   // ...
 
-  class LogsContext implements Context
+  class HelloWorldContext implements Context
   {
       private bool $enable = false;
-      private string $filepath;
+      private string $text;
 
-      public function initializeConfig(bool $enable, string $filepath)
+      public function initializeConfig(bool $enable, string $text)
       {
           $this->enable = $enable;
-          $this->filepath = $filepath;
+          $this->text = $text;
       }
 
-      /** @BeforeScenario */
-      public function before(BeforeScenarioScope $scope)
+      /** @Given I say Hello World */
+      public function helloWorld()
       {
           if ($this->enable === false) {
               return;
           }
-
-          file_put_contents(
-              $this->filepath,
-              'START: ' . $scope->getScenario()->getTitle() . ' - ' . time() . PHP_EOL,
-              FILE_APPEND
-          );
-      }
-
-      /** @AfterScenario */
-      public function after(AfterScenarioScope $scope)
-      {
-          if ($this->enable === false) {
-              return;
-          }
-
-          file_put_contents(
-              $this->filepath,
-              'END: ' . $scope->getScenario()->getTitle() . ' - ' . time() . PHP_EOL,
-              FILE_APPEND
-          );
+  
+          throw new PendingException($this->text);
       }
   }
 
@@ -281,10 +238,9 @@ Using the extension
 
 Now that the extension is ready and will inject values into context, we just need to configure it into a project.
 
-In the ``extensions`` key of a profile (``default`` in our case), we'll add the ``LogsExtension`` key and configure our ``filepath`` and ``enable`` value.
+In the ``extensions`` key of a profile (``default`` in our case), we'll add the ``HelloWorldExtension`` key and configure our ``text`` and ``enable`` value.
 
-Finally, we need to load the ``LogsExtension\Context\LogsContext`` into our suite.
-As the steps are hooked onto scenarios events, the context will be automatically called everytime a scenario starts or ends.
+Finally, we need to load the ``HelloWorld\Context\HelloWorldContext`` into our suite.
 
 Here's the ``behat.yaml``:
 
@@ -295,18 +251,28 @@ Here's the ``behat.yaml``:
       default:
         contexts:
           - FeatureContext
-          - LogsExtension\Context\LogsContext
+          - HelloWorld\Context\HelloWorldContext
     extensions:
-      LogsExtension:
-        filepath: 'logs.txt'
+      HelloWorld\ServiceContainer\HelloWorldExtension:
+        text: 'Hi there!'
         enable: true
 
+And now a scenario like this one:
+
+.. code-block::
+  Feature: Test
+  
+    Scenario: Test
+      Given I say Hello World
+
+Will display our text as a pending text.
 
 Conclusion
 ----------
 
-Congratulations! You have just created a simple Behat extension that logs scenario durations. This extension demonstrates the three essential steps to building a Behat extension: defining an extension, creating an initializer, and configuring contexts.
+Congratulations! You have just created a simple Behat extension.
+This extension demonstrates the three essential steps to building a Behat extension: defining an extension, creating an initializer, and configuring contexts.
 
-Feel free to experiment with this extension and expand its functionality. For further learning, check out the :doc:`Behat hooks documentation</user_guide/context/hooks>` and explore existing extensions on `GitHub <https://github.com/search?o=desc&q=behat+extension+in%3Aname%2Cdescription+language%3APHP&ref=searchresults&s=stars&type=Repositories>`_.
+Feel free to experiment with this extension and expand its functionality.
 
 Happy testing!
