@@ -1,24 +1,24 @@
 Writing a custom Behat formatter
 ================================
 
-How to write a custom formatter for Behat ?
+How to write a custom formatter for Behat?
 
 Introdution
 -----------
 
-Why a custom formatter ?
+Why a custom formatter?
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Behat has three native formatters:
 
--  **pretty**: the default formatter, that does print every line in green (in case of a successful test) or red (if it does fail),
+-  **pretty**: the default formatter, which prints every line in green (if a test passes) or red (if it fails),
 -  **progress**: print a "dot" for each test, and a recap of all failing tests at the end,
 -  **junit**: outputs a `junit <https://junit.org/>`__ compatible XML file.
 
 Those are nice, and worked for most of the cases. You can use the "progress" one for the CI, and the "pretty" for development for example.
 
-But you might want to handle differently the output that Behat renders. 
-In that cookbook, we will see how to implement a custom formatter for `reviewdog <https://github.com/reviewdog/reviewdog>`__, 
+But you might want to handle differently the output that Behat renders.
+In this cookbook, we will see how to implement a custom formatter for `reviewdog <https://github.com/reviewdog/reviewdog>`__,
 a global review tool that takes input of linters or testers, and that can send "checks" on github, bitbucket or gitlab PR.
 
 Reviewdog can handle `two types of input <https://github.com/reviewdog/reviewdog#input-format>`__:
@@ -26,16 +26,16 @@ Reviewdog can handle `two types of input <https://github.com/reviewdog/reviewdog
 -  any stdin, coupled with an "errorformat" (a Vim inspired format that can convert text string to machine-readable errors),
 -  a `"Reviewdog Diagnostic Format" <https://github.com/reviewdog/reviewdog/tree/48b25a0aafb8494e751387e16f729faee9522c46/proto/rdf>`__: a JSON with error data that reviewdog can parse.
 
-In my case, I tried parsing behat's output with errorformat, but I do not know this language, and the multi-line behat output with "dots" didn't make it simple.
+In my case, I tried parsing Behat's output with errorformat, but I do not know this language, and the multi-line Behat output with "dots" didn't make it easy.
 So I decided to create a custom formatter for Behat.
 
-This way, I will still have behat's human-readable stdout, and a JSON file written that reviewdog can understand.
+This way, I will still have Behat's human-readable stdout, and a JSON file written that reviewdog can understand.
 
 Let's dive
 ----------
 
-Behat allows us to load "extensions", that can add features to the language. In fact, it is a core functionnality to implement PHP functions behind gherkin texts.
-Those extensions are simple classes, that are loaded in Behat.
+Behat allows us to load "extensions", that can add features to the language. In fact, it is a core functionality to implement PHP functions behind gherkin texts.
+Those extensions are just classes that are loaded by Behat to register configuration and features.
 
 Behat is powered by Symfony: if you know it, you will already know the concepts under the hood, if you don't, that's not a problem and not required to create your extension.
 
@@ -44,18 +44,18 @@ Anatomy of a formatter extension
 
 A formatter extension requires three things to work:
 
--  a class that "defines" the extension, to make you extension work with behat,
--  a "formatter", that can listen to behat events, and converts behat's tests result to anything you want,
--  an "output printer", that does write the converted data anywhere you want (mainly the stdout, a file or a directory).
+-  a class that "defines" the extension, to make your extension work with Behat,
+-  a "formatter", that can listen to Behat events, and converts Behat's tests result to anything you want,
+-  an "output printer", that writes the converted data anywhere you want (mainly the stdout, a file or a directory).
 
 Create the extension
 ~~~~~~~~~~~~~~~~~~~~
 
-Any behat extensions must implements ``Behat\Testwork\ServiceContainer\Extension``. Under the hood, it does implements Symfony ``CompilerPass``.
+Any Behat extensions must implement ``Behat\Testwork\ServiceContainer\Extension``. Under the hood, it implements Symfony ``CompilerPass``.
 It is a way to inject anything you want into Behat's kernel.
 
-It our case, we need to load the "formatter" in behat's kernel, and tagged it as an output formatter.
-This way behat will allows our extension to be configured as a formatter. You can register multiple formatters with the same extension if you like.
+In our case, we need to load the "formatter" in Behat's kernel, and tag it as an output formatter.
+This way Behat will allow our extension to be configured as a formatter. You can register multiple formatters with the same extension if you like.
 
 .. code:: php
 
@@ -86,18 +86,18 @@ This way behat will allows our extension to be configured as a formatter. You ca
            // register the "Output printer" class
            $outputPrinterDefinition = $container->register(ReviewdogOutputPrinter::class);
 
-           // add some arguments. In that case, it will use behat's current working directory to write the output file, if not override 
+           // add some arguments. In this case, it will use Behat's current working directory to write the output file, if not override
            $outputPrinterDefinition->addArgument('%paths.base%');
 
-           // register the "ReviewdogFormatter" class in behat's kernel
+           // register the "ReviewdogFormatter" class in Behat's kernel
            $formatterDefinition = $container->register(ReviewdogFormatter::class);
-           
-           // add some arguments that will be called in the constructor. 
-           // That's not required but in my case I inject behats base path, to remove it from the absolute file path later, and the printer.
+
+           // add some arguments that will be called in the constructor.
+           // This isn't required, but in my case I inject Behat's base path (to remove it from the absolute file path later) and the printer.
            $formatterDefinition->addArgument('%paths.base%');
            $formatterDefinition->addArgument($outputPrinterDefinition);
 
-           // tag the formatter as an "output.formatter", this way behat will add it to it's formatter list.
+           // tag the formatter as an "output.formatter", this way Behat will add it to its formatter list.
            $formatterDefinition->addTag(OutputExtension::FORMATTER_TAG, ['priority' => 100]);
        }
 
@@ -111,7 +111,7 @@ This way behat will allows our extension to be configured as a formatter. You ca
 Create the formatter
 ~~~~~~~~~~~~~~~~~~~~
 
-The formatter will listen to behat's events, and create output data depending on the type of event, the current state, etc.
+The formatter will listen to Behat's events, and create output data depending on the type of event, the current state, etc.
 
 .. code:: php
 
@@ -135,7 +135,7 @@ The formatter will listen to behat's events, and create output data depending on
        }
 
        /**
-        * setParameter will be called for each key given to the formatter in your behat.yml file. 
+        * setParameter will be called for each key given to the formatter in your behat.yml file.
         * We will see that later in the "integration".
         * In our case, the only allowed parameter is a "file_name" that must be a string : the JSON file that we will write.
         */
@@ -160,13 +160,13 @@ The formatter will listen to behat's events, and create output data depending on
        public function getParameter($name) { }
 
        /**
-        * Our formatter is a Symfony EventSubscriber. 
-        * This method tells behat where we want to "hook" in the process.
+        * Our formatter is a Symfony EventSubscriber.
+        * This method tells Behat where we want to "hook" in the process.
         * Here we want to be called:
         *   - at start, when the test is launched with the `BeforeExerciseCompleted::BEFORE` event,
         *   - when a step has ended with the `StepTested::AFTER` event.
-        * 
-        * There is a lot of other that can be found here: https://github.com/Behat/Behat/tree/2a3832d9cb853a794af3a576f9e524ae460f3340/src/Behat/Testwork/EventDispatcher/Event
+        *
+        * There are a lot of other events that can be found here in the Behat\Testwork\EventDispatcher\Event class
         */
        public static function getSubscribedEvents()
        {
@@ -218,7 +218,7 @@ The formatter will listen to behat's events, and create output data depending on
            // get the relative path
            $path = str_replace($this->pathsBase . '/', '', $event->getFeature()->getFile() ?? '');
 
-           // do prepare the data that we will send to the printer…
+           // prepare the data that we will send to the printer…
            $line = [
                'message' => $testResult->getException()?->getMessage() ?? 'Failed step',
                'location' => [
@@ -247,7 +247,7 @@ The formatter will listen to behat's events, and create output data depending on
 Create the output printer
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The latest file that we need to implement is the printer. In you case it's a simple class that can write lines to a file.
+The last file that we need to implement is the printer. In our case we need a single class that can write lines to a file.
 
 .. code:: php
 
@@ -278,7 +278,7 @@ The latest file that we need to implement is the printer. In you case it's a sim
        }
 
        /**
-        * outputPath is a special parameter that you can give to behat formatter under th key `output_path`
+        * outputPath is a special parameter that you can give to any Behat formatter under the key `output_path`
         */
        public function setOutputPath($path): void
        {
@@ -286,7 +286,7 @@ The latest file that we need to implement is the printer. In you case it's a sim
        }
 
        /**
-        * The output path, defaults to behat's base path
+        * The output path, defaults to Behat's base path
         */
        public function getOutputPath(): string
        {
@@ -315,7 +315,8 @@ The latest file that we need to implement is the printer. In you case it's a sim
        }
 
        /**
-        * Behat can have mutliple verbosity level, you may want to handle it to display more informations.
+        * Behat can have multiple verbosity levels, you may want to handle this to display more information.
+        * These use the Symfony\Component\Console\Output\OutputInterface::VERBOSITY_ constants.
         * For reviewdog, I do not need that.
         */
        public function setOutputVerbosity($level): void { }
@@ -328,7 +329,7 @@ The latest file that we need to implement is the printer. In you case it's a sim
 
        /**
         * Writes message(s) to output stream.
-        * 
+        *
         * @param string|array<string> $messages
         */
        public function write($messages): void
@@ -342,10 +343,10 @@ The latest file that we need to implement is the printer. In you case it's a sim
 
        /**
         * Writes newlined message(s) to output stream.
-        * 
+        *
         * @param string|array<string> $messages
         */
-        
+
        public function writeln($messages = ''): void
        {
            if (!is_array($messages)) {
@@ -364,7 +365,7 @@ The latest file that we need to implement is the printer. In you case it's a sim
        }
 
        /**
-        * Called by the formatted when test starts
+        * Called by the formatter when test starts
         */
        public function removeOldFile(): void
        {
@@ -398,18 +399,18 @@ The latest file that we need to implement is the printer. In you case it's a sim
 Integration in your project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You need to add the extension in you behat configuration file (default is ``behat.yml``) and configure it to use the formatter:
+You need to add the extension in your Behat configuration file (default is ``behat.yml``) and configure it to use the formatter:
 
 .. code:: yaml
 
    default:
      extensions:
        JDeniau\BehatReviewdogFormatter\ReviewdogFormatterExtension: ~
-       
+
      formatters:
        pretty: true
        reviewdog: # "reviewdog" here is the "name" given in our formatter
-         # output_path is optional and handled directy by behat
+         # output_path is optional and handled directly by Behat
          output_path: 'build/logs/behat'
          # file_name is optional and a custom parameter that we inject into the printer
          file_name: 'reviewdog-behat.json'
@@ -417,16 +418,16 @@ You need to add the extension in you behat configuration file (default is ``beha
 Different output per profile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can active the extension only for a certain profile by specifying a profile in your command (ex: ``--profile=ci``)
+You can activate the extension only when you specify a profile in your command (ex: ``--profile=ci``)
 
-For example if you want the pretty formatter by default, but both progress and reviewdog on your CI, you can configure it like that:
+For example if you want the pretty formatter by default, but both progress and reviewdog on your CI, you can configure it like this:
 
 .. code:: yaml
 
    default:
      extensions:
        JDeniau\BehatReviewdogFormatter\ReviewdogFormatterExtension: ~
-       
+
      formatters:
        pretty: true
 
@@ -439,22 +440,22 @@ For example if you want the pretty formatter by default, but both progress and r
          file_name: 'reviewdog-behat.json'
 
 
-Enjoy !
+Enjoy!
 -------
 
-That's how you can write a simple custom behat formatter !
+That's how you can write a basic custom Behat formatter!
 
-If you have much more complex logic, and you need to formatter to be more dynamic, behat do provide a FormatterFactory interface.
-You can see usage examples directly in `behat's codebase <https://github.com/Behat/Behat/tree/2a3832d9cb853a794af3a576f9e524ae460f3340/src/Behat/Behat/Output/ServiceContainer/Formatter>`__,
-but in a lot of cases, the simple formatter should work.
+If you have much more complex logic, and you need the formatter to be more dynamic, Behat do provide a FormatterFactory interface.
+You can see usage examples directly in `Behat's codebase <https://github.com/Behat/Behat/tree/2a3832d9cb853a794af3a576f9e524ae460f3340/src/Behat/Behat/Output/ServiceContainer/Formatter>`__,
+but in a lot of cases, something like this example should work.
 
-Want to use reviewdog and the custom formatter yourself ?
+Want to use reviewdog and the custom formatter yourself?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to use the reviewdog custom formatter, you can find it on github: https://github.com/jdeniau/behat-reviewdog-formatter
 
-There are other behat custom formatters in the wild, especially `BehatHtmlFormatterPlugin <https://github.com/dutchiexl/BehatHtmlFormatterPlugin>`__,
-that I did not test, but helped me understand how does behat formatter system works, and can output an HTML file that can help you understand why your CI is failing.
+There are other Behat custom formatters in the wild, especially `BehatHtmlFormatterPlugin <https://github.com/dutchiexl/BehatHtmlFormatterPlugin>`__.
+I did not test that, but it helped me understand how the Behat formatter system works, and it can output an HTML file that can help you understand why your CI is failing.
 
 
 About the author
