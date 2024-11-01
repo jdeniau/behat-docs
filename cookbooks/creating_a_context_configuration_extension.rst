@@ -1,4 +1,4 @@
-Creating a Behat extension
+Creating a Behat extension to provide custom configuration for Contexts
 ==========================
 
 Extensions are particularly useful when configuration becomes a necessity.
@@ -13,15 +13,14 @@ In this cookbook, we will create a simple extension named ``HelloWorld`` that wi
 Setting Up the Context
 ----------------------
 
-First, we need to create a ``Context`` class that will throw a ``PendingException`` with a configurable text.
-A behavior that could be enable or not.
+First, we create a ``Context`` class that will throw a ``PendingException`` with a configurable text.
+The configuration will also control whether the behaviour is enabled or not.
 
 .. code-block::
 
   src/
       Context/
           HelloWorldContext.php   # This is where we'll implement our step
-
 
 .. code-block:: php
 
@@ -37,6 +36,9 @@ A behavior that could be enable or not.
       private bool $enable = false;
       private string $text;
 
+      /*
+       * Will be used by the extension to initialise the context with configuration values.
+       */
       public function initializeConfig(bool $enable, string $text)
       {
           $this->enable = $enable;
@@ -205,34 +207,6 @@ We need to register the initializer definition within the Behat container throug
       // ...
   }
 
-To complete the extension, we must add methods to ``HelloWorldContext`` to receive the configuration values and use those in the hooks:
-
-.. code-block:: php
-
-  // ...
-
-  class HelloWorldContext implements Context
-  {
-      private bool $enable = false;
-      private string $text;
-
-      public function initializeConfig(bool $enable, string $text)
-      {
-          $this->enable = $enable;
-          $this->text = $text;
-      }
-
-      /** @Given I say Hello World */
-      public function helloWorld()
-      {
-          if ($this->enable === false) {
-              return;
-          }
-  
-          throw new PendingException($this->text);
-      }
-  }
-
 Using the extension
 -------------------
 
@@ -260,18 +234,19 @@ Here's the ``behat.yaml``:
 And now a scenario like this one:
 
 .. code-block::
+
   Feature: Test
-  
+
     Scenario: Test
       Given I say Hello World
 
-Will display our text as a pending text.
+Will display our text ``Hi there!`` as a pending exception.
 
 Conclusion
 ----------
 
 Congratulations! You have just created a simple Behat extension.
-This extension demonstrates the three essential steps to building a Behat extension: defining an extension, creating an initializer, and configuring contexts.
+This extension demonstrates three of the common steps to building a Behat extension: defining an extension, creating an initializer, and configuring contexts.
 
 Feel free to experiment with this extension and expand its functionality.
 
