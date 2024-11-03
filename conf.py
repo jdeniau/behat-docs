@@ -5,7 +5,9 @@ from sphinx.highlighting import lexers
 from pygments.lexers.web import PhpLexer
 
 lexers['php'] = PhpLexer(startinline=True)
-extensions = []
+extensions = [
+   'notfound.extension',
+]
 
 source_suffix = '.rst'
 source_encoding = 'utf-8'
