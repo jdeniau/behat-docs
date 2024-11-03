@@ -8,6 +8,7 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
+    # Note: Update the instructions for building locally in README.md if the python version changes
     python: "3.12"
 
 # Build documentation in the "docs/" directory with Sphinx
