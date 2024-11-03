@@ -24,5 +24,6 @@ exclude_patterns = []
 
 htmlhelp_basename = 'behat'
 
+html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 html_theme_path = ["_themes"]
 html_theme = 'borg'
