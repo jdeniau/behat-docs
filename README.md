@@ -47,7 +47,7 @@ docker run --rm -it --entrypoint bash -v $PWD:/workspace -w /workspace python:3.
 
 # In your container, install the required dependencies:
 python -m pip install --upgrade --no-cache-dir pip setuptools
-python -m pip install --upgrade --no-cache-dir sphinx
+python -m pip install --upgrade --no-cache-dir -r requirements.txt
 
 # Then, to build the docs:
 python -m sphinx -T -W --keep-going -b html -d _build/doctrees -D language=en . _build/html
