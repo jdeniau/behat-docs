@@ -111,6 +111,40 @@ All files from the ``imports`` block will be loaded by Behat and merged, in the 
 
 This allows configuration files listed in the ``imports`` key to override configuration values for previously listed files.
 
+Global profile configuration
+----------------------------
+
+You can set some global configuration in your profile configuration:
+
+.. code-block:: yaml
+
+    # behat.yml
+    default:
+        config: # these are the default values
+            stop_on_failure: false 
+            strict: false
+
+
+Combining the fact that you can override the default profile, you can change the configuration per profile:
+
+.. code-block:: yaml
+
+    # behat.yml
+    default:
+        config:
+            stop_on_failure: true
+            strict: false
+
+    ci:
+        config:
+            stop_on_failure: false
+            strict: true
+
+This way, with the default profile behat will stop on failure and won't be strict, but will not stop and will be strict if the CI profile is selected.
+
+You can force `--stop-on-failure` and `--strict` via CLI options to override configuration values.
+
+
 Environment Variable - BEHAT_PARAMS
 -----------------------------------
 
