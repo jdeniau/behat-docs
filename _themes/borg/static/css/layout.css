@@ -44,11 +44,12 @@ header nav {
   z-index: 30;
   width: 654px;
   height: 68px;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 header nav .section {
   display: block;
-  float: left;
   height: 67px;
   min-height: 20px;
   padding-top: 21px;
@@ -72,22 +73,24 @@ header nav a:hover {
   border-top-color: #858585;
 }
 
-header nav .fork-us {
+header nav .section.search {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+header nav .section.search input {
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 10px;
+    padding: 2px 5px;
+}
+
+header nav .section.fork-us {
   display: block;
-  float: right;
-  height: 67px;
-  min-height: 20px;
-  padding-top: 21px;
   padding-left: 22px;
-  border-top: 6px solid rgb(161, 159, 159);
   background: url('../images/fork@2x.png') no-repeat left center;
   background-size: 15px 20px;
-  font-size: 1.4rem;
-  font-weight: 400;
-  line-height: 1.38;
   text-align: right;
-  color: rgb(80, 80, 80);
-  text-transform: uppercase;
 }
 
 .page {
@@ -149,4 +152,16 @@ footer .copyright {
   font-weight: 400;
   line-height: 1.38;
   color: rgb(192, 192, 192);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
