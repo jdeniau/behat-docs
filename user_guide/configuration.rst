@@ -169,7 +169,7 @@ you want to autoload via ``behat.yml``:
 
     default:
         autoload:
-            '': %paths.base%/app/features/bootstrap
+            '': '%paths.base%/app/features/bootstrap'
 
 If you wish to namespace your features (for example: to be PSR-1 compliant) you will need to add the namespace to the classes and also tell behat where to load them. Here ``contexts`` is an array of classes:
 
@@ -180,7 +180,7 @@ If you wish to namespace your features (for example: to be PSR-1 compliant) you 
 
     default:
         autoload:
-            '': %paths.base%/app/features/bootstrap
+            '': '%paths.base%/app/features/bootstrap'
         suites:
             default:
                 contexts: [My\Application\Namespace\Bootstrap\FeatureContext]

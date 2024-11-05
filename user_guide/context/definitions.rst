@@ -150,6 +150,12 @@ annotations for the one method:
 
 Behat will call the corresponding method if any of the patterns matches.
 
+.. note::
+
+   Behat uses the ``preg_match()`` function to match these regular expressions to arguments. Special care is needed to make sure
+   that there is only one capturing group for each argument. A expression like ``(?P<property>([\w\s]+))`` contains an inner capturing
+   group (``([\w\s]+)``) and this may make some arguments not match correctly. The right expression to use would be ``(?P<property>[\w\s]+)``
+
 Definition Snippets
 -------------------
 

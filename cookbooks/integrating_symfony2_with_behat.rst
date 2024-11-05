@@ -115,7 +115,7 @@ you need to change your ``behat.yml`` configuration and tell the extension which
             default:
                 contexts:
                     - FeatureContext:
-                        mySymfonyParam: %%my.symfony_param%%
+                        mySymfonyParam: '%%my.symfony_param%%'
         extensions:
             Behat\Symfony2Extension: ~
 
