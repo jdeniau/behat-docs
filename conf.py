@@ -5,7 +5,9 @@ from sphinx.highlighting import lexers
 from pygments.lexers.web import PhpLexer
 
 lexers['php'] = PhpLexer(startinline=True)
-extensions = []
+extensions = [
+   'notfound.extension',
+]
 
 source_suffix = '.rst'
 source_encoding = 'utf-8'
@@ -22,5 +24,6 @@ exclude_patterns = []
 
 htmlhelp_basename = 'behat'
 
+html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 html_theme_path = ["_themes"]
 html_theme = 'borg'
