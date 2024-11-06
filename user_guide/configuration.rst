@@ -120,7 +120,7 @@ You can set some global configuration in your profile configuration:
 
     # behat.yml
     default:
-        config: # these are the default values
+        testers: # these are the default values
             stop_on_failure: false 
             strict: false
 
@@ -131,12 +131,12 @@ Combining the fact that you can override the default profile, you can change the
 
     # behat.yml
     default:
-        config:
+        testers:
             stop_on_failure: true
             strict: false
 
     ci:
-        config:
+        testers:
             stop_on_failure: false
             strict: true
 
