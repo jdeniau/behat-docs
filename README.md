@@ -39,18 +39,14 @@ built version.
 ## Building locally
 
 For more significant changes, you may want to build the full docs site locally. For this, you will need python, sphinx
-and the relevant dependencies. The easiest solution may be to use a temporary docker container.
+and the relevant dependencies. The easiest solution may be to use a temporary docker container. In this repository you will
+find a `Dockerfile` and a `docker-compose.yml` file that will let you do that easily
 
 ```bash
-# Launch an interactive shell in a container with the required python version
-docker run --rm -it --entrypoint bash -v $PWD:/workspace -w /workspace python:3.12.3
+# Launch a docker container with the right dependencies and run the site build command
+# This will build the container if needed, using the Dockerfile
+docker compose run --rm read-the-docs-builder
 
-# In your container, install the required dependencies:
-python -m pip install --upgrade --no-cache-dir pip setuptools
-python -m pip install --upgrade --no-cache-dir -r requirements.txt
-
-# Then, to build the docs:
-python -m sphinx -T -W --keep-going -b html -d _build/doctrees -D language=en . _build/html
 # The docs will be generated into _build/html
 # Check the CLI ouput for any errors
 ```
