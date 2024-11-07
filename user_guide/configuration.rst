@@ -15,12 +15,12 @@ profiles.
 All configuration happens inside a single configuration file in the ``YAML``
 format. By default, Behat loads the configuration from the first file matching:
 
-* ``behat.yaml`` or ``behat.yml``
-* ``behat.yaml.dist`` or ``behat.yml.dist``
-* ``behat.dist.yaml`` or ``behat.dist.yml``
-* ``config/behat.yaml`` or ``config/behat.yml``
-* ``config/behat.yaml.dist`` or ``config/behat.yml.dist``
-* ``config/behat.dist.yaml`` or ``config/behat.dist.yml``
+#. ``behat.yaml`` or ``behat.yml``
+#. ``behat.yaml.dist`` or ``behat.yml.dist``
+#. ``behat.dist.yaml`` or ``behat.dist.yml``
+#. ``config/behat.yaml`` or ``config/behat.yml``
+#. ``config/behat.yaml.dist`` or ``config/behat.yml.dist``
+#. ``config/behat.dist.yaml`` or ``config/behat.dist.yml``
 
 You can also tell Behat where your config file is with the ``--config`` option:
 
