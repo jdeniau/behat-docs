@@ -1,0 +1,7 @@
+services:
+    read-the-docs-builder:
+        build:
+            context: .
+        volumes:
+            - ./:/workspace
+        command: python -m sphinx -T -W --keep-going -b html -d _build/doctrees -D language=en . _build/html
