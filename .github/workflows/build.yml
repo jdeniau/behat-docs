@@ -1,0 +1,23 @@
+name: Build Docs
+
+on:
+  push:
+    branches: [master]
+  pull_request: ~
+
+jobs:
+  build-docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run build command
+        run: docker compose run --rm read-the-docs-builder
+
+      - name: Check build
+        run: cat _build/html/guides.html
