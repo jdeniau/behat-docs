@@ -12,3 +12,4 @@ User Guide
    user_guide/context
    user_guide/command_line_tool
    user_guide/configuration
+   user_guide/integrations
