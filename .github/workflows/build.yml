@@ -21,3 +21,9 @@ jobs:
 
       - name: Check build
         run: cat _build/html/guides.html
+
+      - name: save site as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: _build/html
