@@ -10,8 +10,8 @@ Mink
 Behat can be used to describe the business logic of many different projects, but one of the
 main uses is for web applications where it can be used to provide functional testing. `Mink`_
 is a library which lets you control or emulate a web browser and which lets you simulate the
-interactions of users with a web page. It provides a number of drivers for tools like
-Selenium or Goutte to implement these capabilities.
+interactions of users with a web page. It supports a number of drivers for tools like
+Selenium, BrowserKit, and Chrome DevTools Protocol to implement these capabilities
 
 `Mink Extension`_ is a Behat extension that lets you interact with Mink from Behat, providing
 additional services like ``Sessions`` or ``Drivers`` and providing a number of base step
