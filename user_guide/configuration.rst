@@ -223,16 +223,16 @@ You can also use ``composer.json`` to autoload, which will also allow for ``PSR-
 
 .. code-block:: json
 
-    // composer.json
-    
-    "autoload-dev": {
+    {
+      "autoload-dev": {
         "psr-4": {
-           "My\\Application\\Namespace\\Bootstrap\\": "app/features/bootstrap"
+          "My\\Application\\Namespace\\Bootstrap\\": "app/features/bootstrap"
         }
+      }
     }
 
 If you add this to your ``composer.json`` file, then you won't need to specify autoloading in
-your ``behat.yml` file:
+your ``behat.yml`` file:
 
 .. code-block:: yaml
 
