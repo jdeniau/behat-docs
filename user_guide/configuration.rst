@@ -217,11 +217,31 @@ If you wish to namespace your features (for example: to be PSR-1 compliant) you 
             default:
                 contexts: [My\Application\Namespace\Bootstrap\FeatureContext]
 
-.. note::
 
-    Using ``behat.yml`` to autoload will only allow for ``PSR-0``.
-    You can also use ``composer.json`` to autoload, which will also
-    allow for ``PSR-4``
+Using ``behat.yml`` to autoload will only allow for ``PSR-0``.
+You can also use ``composer.json`` to autoload, which will also allow for ``PSR-4``:
+
+.. code-block:: json
+
+    // composer.json
+    
+    "autoload-dev": {
+        "psr-4": {
+           "My\\Application\\Namespace\\Bootstrap\\": "app/features/bootstrap"
+        }
+    }
+
+If you add this to your ``composer.json`` file, then you won't need to specify autoloading in
+your ``behat.yml` file:
+
+.. code-block:: yaml
+
+    # behat.yml
+
+    default:
+        suites:
+            default:
+                contexts: [My\Application\Namespace\Bootstrap\FeatureContext]
 
 Formatters
 ----------
