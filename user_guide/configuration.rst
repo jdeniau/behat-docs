@@ -175,7 +175,8 @@ You can also use ``composer.json`` to autoload, which will also allow for ``PSR-
         }
     }
 
-That way, specifying the path to autoload to Behat is no more useful:
+If you add this to your ``composer.json`` file, then you won't need to specify autoloading in
+your ``behat.yml` file:
 
 .. code-block:: yaml
 
