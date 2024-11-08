@@ -124,7 +124,6 @@ You can set some global configuration in your profile configuration:
             stop_on_failure: false 
             strict: false
 
-
 Combining the fact that you can override the default profile, you can change the configuration per profile:
 
 .. code-block:: yaml
@@ -143,7 +142,6 @@ Combining the fact that you can override the default profile, you can change the
 This way, with the default profile behat will stop on failure and won't be strict, but will not stop and will be strict if the CI profile is selected.
 
 You can force `--stop-on-failure` and `--strict` via CLI options to override configuration values.
-
 
 Environment Variable - BEHAT_PARAMS
 -----------------------------------
