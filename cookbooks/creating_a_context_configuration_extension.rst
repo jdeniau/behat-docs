@@ -124,7 +124,9 @@ The ``configure`` method is used to define the configuration tree.
 
 .. note::
 
-  The ``initialize`` and ``process`` methods are empty in our case but are useful when you need to interact with other extensions or process the container after it has been compiled.
+  The ``initialize`` and ``process`` methods are empty in our case but are
+  useful when you need to interact with other extensions or process the
+  container after it has been compiled.
 
 Initializing the Context
 ------------------------
@@ -132,7 +134,7 @@ Initializing the Context
 To pass configuration values to our ``HelloWorldContext``, we need to create an initializer.
 
 .. code-block::
-    
+
   src/
       Context/
           Initializer/
@@ -180,7 +182,8 @@ The code for ``HelloWorldInitializer.php``:
       }
   }
 
-We need to register the initializer definition within the Behat container through the ``HelloWorldExtension``, ensuring it gets loaded:
+We need to register the initializer definition within the Behat container
+through the ``HelloWorldExtension``, ensuring it gets loaded:
 
 .. code-block:: php
 
@@ -211,9 +214,11 @@ We need to register the initializer definition within the Behat container throug
 Using the extension
 -------------------
 
-Now that the extension is ready and will inject values into context, we just need to configure it into a project.
+Now that the extension is ready and will inject values into context, we just
+need to configure it into a project.
 
-In the ``extensions`` key of a profile (``default`` in our case), we'll add the ``HelloWorldExtension`` key and configure our ``text`` and ``enable`` value.
+In the ``extensions`` key of a profile (``default`` in our case), we'll add
+the ``HelloWorldExtension`` key and configure our ``text`` and ``enable`` value.
 
 Finally, we need to load the ``HelloWorld\Context\HelloWorldContext`` into our suite.
 
@@ -247,7 +252,8 @@ Conclusion
 ----------
 
 Congratulations! You have just created a simple Behat extension.
-This extension demonstrates three of the common steps to building a Behat extension: defining an extension, creating an initializer, and configuring contexts.
+This extension demonstrates three of the common steps to building a Behat
+extension: defining an extension, creating an initializer, and configuring contexts.
 
 Feel free to experiment with this extension and expand its functionality.
 
