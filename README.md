@@ -48,7 +48,7 @@ find a `Dockerfile` and a `docker-compose.yml` file that will let you do that ea
 docker compose run --rm read-the-docs-builder
 
 # The docs will be generated into _build/html
-# Check the CLI ouput for any errors
+# Check the CLI output for any errors
 ```
 
 If you encounter problems, start by looking at the logs of the latest build on Read the Docs to see the commands that

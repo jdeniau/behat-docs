@@ -708,6 +708,6 @@ via a comma-delimited list of the column headers prefixed with ``table:``:
 
 .. tip::
    Behat provides a :ref:`command line
-   option<user-guide--comand-line-tool--informative-output--print-definitions>`
+   option<user-guide--command-line-tool--informative-output--print-definitions>`
    that allows you to easily browse definitions in order to reuse them or adapt
    them.

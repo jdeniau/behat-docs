@@ -97,7 +97,7 @@ The ``configure`` method is used to define the configuration tree.
        */
       public function initialize(ExtensionManager $extensionManager)
       {
-          // emtpy for our case
+          // empty for our case
       }
 
       public function configure(ArrayNodeDefinition $builder)

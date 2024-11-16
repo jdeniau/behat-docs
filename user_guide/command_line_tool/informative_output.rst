@@ -1,7 +1,7 @@
 Informative Output
 ==================
 
-.. _user-guide--comand-line-tool--informative-output--print-definitions:
+.. _user-guide--command-line-tool--informative-output--print-definitions:
 
 Print Definitions
 -----------------
