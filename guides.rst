@@ -70,6 +70,7 @@ and the same.
    quick_start
    user_guide
    cookbooks
+   releases
    useful_resources
    community
 

@@ -7,6 +7,8 @@ from pygments.lexers.web import PhpLexer
 lexers['php'] = PhpLexer(startinline=True)
 extensions = [
    'notfound.extension',
+   # Enables automatic linking to headings within the document within Sphinx
+   'sphinx.ext.autosectionlabel'
 ]
 
 source_suffix = '.rst'
