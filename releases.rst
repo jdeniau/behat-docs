@@ -6,11 +6,11 @@ Behat follows `Semantic Versioning`_ - breaking changes will only be made in a m
 Supported versions
 ------------------
 
-======= ========== ========== ============ =====================================================================
+======= ========== ========== ============ =======================================================================
 Major   Released   Bugfix EOL Security EOL
-======= ========== ========== ============ =====================================================================
-`v3.x`_ April 2014 See below  See below    `Changelog <https://github.com/Behat/Behat/blob/master/CHANGES.md>`__
-======= ========== ========== ============ =====================================================================
+======= ========== ========== ============ =======================================================================
+`v3.x`_ April 2014 See below  See below    `Changelog <https://github.com/Behat/Behat/blob/master/CHANGELOG.md>`__
+======= ========== ========== ============ =======================================================================
 
 As a minimum, a major version series will receive:
 
@@ -23,10 +23,10 @@ likely effort required for users and third-party extensions to upgrade.
 
 Bugfixes will usually only be applied to the most recent minor of each supported major version, unless they are
 particularly severe or have security implications. This will impact
-:ref:`support for End-of-Life PHP & symfony versions<Support for PHP and dependency versions>`.
+:ref:`support for End-of-Life PHP & Symfony versions<Support for PHP and dependency versions>`.
 
 Release timescales
-------------------------------
+------------------
 
 There is no fixed schedule for releasing new major versions - but we will try to keep them to a frequency that is
 manageable for users.
@@ -44,19 +44,19 @@ specifically explains that it is provided without warranty of any kind.
 Support for PHP and dependency versions
 ---------------------------------------
 
-Behat only supports current versions of PHP and third-party dependency packages (e.g. symfony components).
+Behat only supports current versions of PHP and third-party dependency packages (e.g. Symfony components).
 
 By "current", we mean:
 
 * PHP versions that are listed as receiving active support or security fixes on the `official php.net version support page`_.
-* Symfony versions that are listed as maintained or receiving security fixes on the `official symfony releases page`_.
+* Symfony versions that are listed as maintained or receiving security fixes on the `official Symfony releases page`_.
 
-Once a PHP or symfony version reaches End of Life we will remove it from our composer.json and CI flows.
+Once a PHP or Symfony version reaches End of Life we will remove it from our composer.json and CI flows.
 
 .. note::
    When we drop support for a PHP / dependency version we will highlight this in the CHANGELOG, but we will treat
    it as a minor release. Composer will automatically protect users from upgrading to a version that does not support
-   their environment. Users running Behat as a `.phar` should review the release notes before downloading a new version.
+   their environment. Users running Behat as a ``.phar`` should review the release notes before downloading a new version.
 
 We will not ship bugfix releases for unsupported PHP / dependency versions, unless:
 
@@ -79,6 +79,6 @@ Major   Released   Bugfix EOL   Security EOL
 
 .. _`Semantic Versioning`: http://semver.org/
 .. _`official php.net version support page`: https://www.php.net/supported-versions.php
-.. _`official symfony releases page`: https://symfony.com/releases
+.. _`official Symfony releases page`: https://symfony.com/releases
 .. _`v2.x`: https://github.com/Behat/Behat/releases?q=v2
 .. _`v3.x`: https://github.com/Behat/Behat/releases?q=v3
