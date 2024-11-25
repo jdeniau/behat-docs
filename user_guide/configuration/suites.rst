@@ -87,7 +87,7 @@ This will cause Behat to:
 .. note::
 
     ``%paths.base%`` is a special variable in ``behat.yml`` that refers
-    to the folder in which ``behat.yml`` is stored. When using it, or 
+    to the folder in which ``behat.yml`` is stored. When using it, or
     any other percent-encased variable, it has to be put in quotes.
 
 Path-based suites are an easy way to test highly-modular applications
@@ -122,7 +122,7 @@ features with specific tag (or name) in specific contexts:
 
 .. note::
 
-    The `@` character is a special and requires the tag to be
+    The ``@`` character is a special and requires the tag to be
     put in quotes.
 
 This configuration will tell Behat to run features and scenarios

@@ -3,7 +3,8 @@ Community
 
 Behat has an amazing community around it.
 
-The Behat community is friendly and welcoming. All questions and comments are valuable, so please come join the discussion!
+The Behat community is friendly and welcoming. All questions and comments are
+valuable, so please come join the discussion!
 
 There are a number of places to connect with community members at all experience levels.
 

@@ -1,0 +1,31 @@
+name: Check Docs
+
+on:
+  push:
+    branches: [v3.0]
+  pull_request: null
+
+jobs:
+  sphinx:
+    name: Sphinx reStructuredText validity
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install sphinx-lint
+        run: |
+          pip install --user sphinx-lint
+      - name: Check Sphinx document sources
+        run: |
+          git ls-files --cached -z -- '*.rst' \
+            | xargs --null -- python -m sphinxlint --enable all --max-line-length 120
+
+  typos:
+    name: Typos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Search for misspellings
+        uses: crate-ci/typos@master
