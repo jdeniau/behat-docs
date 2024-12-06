@@ -218,7 +218,8 @@ body > section {
 .text .note,
 .text .sidebar,
 .text .tip,
-.text img {
+.text img,
+table.docutils {
   margin-bottom: 20px;
 }
 
@@ -492,4 +493,26 @@ body > section {
 
 .text .next dt, .text .next dd {
   text-align: right;
+}
+
+table.docutils {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.docutils th {
+    font-weight: 600;
+}
+
+table.docutils th, table.docutils td {
+  padding: 6px 13px;
+  border: 1px solid #d1d9e0;
+}
+
+table.docutils tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+table.docutils td > p, table.docutils th > p {
+  margin-bottom: 0;
 }

@@ -15,12 +15,12 @@ profiles.
 All configuration happens inside a single configuration file in the ``YAML``
 format. By default, Behat loads the configuration from the first file matching:
 
-* ``behat.yaml`` or ``behat.yml``
-* ``behat.yaml.dist`` or ``behat.yml.dist``
-* ``behat.dist.yaml`` or ``behat.dist.yml``
-* ``config/behat.yaml`` or ``config/behat.yml``
-* ``config/behat.yaml.dist`` or ``config/behat.yml.dist``
-* ``config/behat.dist.yaml`` or ``config/behat.dist.yml``
+#. ``behat.yaml`` or ``behat.yml``
+#. ``behat.yaml.dist`` or ``behat.yml.dist``
+#. ``behat.dist.yaml`` or ``behat.dist.yml``
+#. ``config/behat.yaml`` or ``config/behat.yml``
+#. ``config/behat.yaml.dist`` or ``config/behat.yml.dist``
+#. ``config/behat.dist.yaml`` or ``config/behat.dist.yml``
 
 You can also tell Behat where your config file is with the ``--config`` option:
 
@@ -98,7 +98,8 @@ Or maybe we want to unset the tag filter for a profile:
 Importing Config
 ----------------
 
-The ``imports`` block can be used to merge multiple configuration files in to one loaded config in Behat, using the following syntax:
+The ``imports`` block can be used to merge multiple configuration files in to
+one loaded config in Behat, using the following syntax:
 
 .. code-block:: yaml
 
@@ -107,9 +108,47 @@ The ``imports`` block can be used to merge multiple configuration files in to on
         - config/base.behat.yml
         - config/ci.behat.yml
 
-All files from the ``imports`` block will be loaded by Behat and merged, in the listed order, into your ``behat.yml`` config. This is especially useful when you want to tweak configuration slightly between local development and on Continuous Integration environments by using partial configuration files.
+All files from the ``imports`` block will be loaded by Behat and merged, in
+the listed order, into your ``behat.yml`` config. This is especially useful
+when you want to tweak configuration slightly between local development and
+on Continuous Integration environments by using partial configuration files.
 
-This allows configuration files listed in the ``imports`` key to override configuration values for previously listed files.
+This allows configuration files listed in the ``imports`` key to override
+configuration values for previously listed files.
+
+Global profile configuration
+----------------------------
+
+You can set some global configuration in your profile configuration:
+
+.. code-block:: yaml
+
+    # behat.yml
+    default:
+        testers: # these are the default values
+            stop_on_failure: false
+            strict: false
+
+Combining the fact that you can override the default profile, you can change the configuration per profile:
+
+.. code-block:: yaml
+
+    # behat.yml
+    default:
+        testers:
+            stop_on_failure: true
+            strict: false
+
+    ci:
+        testers:
+            stop_on_failure: false
+            strict: true
+
+This way, with the default profile behat will stop on failure and won't be
+ strict, but will not stop and will be strict if the CI profile is selected.
+
+You can force ``--stop-on-failure`` and ``--strict`` via CLI options to override
+configuration values.
 
 Environment Variable - BEHAT_PARAMS
 -----------------------------------
@@ -123,23 +162,27 @@ environment variable:
 
 You can set any value for any option that is available in a ``behat.yml`` file.
 Just provide options in *JSON* format.  Behat will use those options as defaults.
-You can always override them with the settings in the project ``behat.yml`` file (it has higher priority).
+You can always override them with the settings in the project ``behat.yml``
+file (it has higher priority).
 
 .. tip::
 
-    In order to specify a parameter in an environment variable, the value *must not* exist in your ``behat.yml``
+    In order to specify a parameter in an environment variable, the value
+    *must not* exist in your ``behat.yml``
 
 .. tip::
 
-    NOTE: In Behat 2.x this variable was in *URL* format.  It has been changed to use *JSON* format.
+    NOTE: In Behat 2.x this variable was in *URL* format.  It has been changed
+    to use *JSON* format.
 
 Global Filters
 --------------
 
-While it is possible to specify filters as part of suite configuration, sometimes you will want to
-exclude certain scenarios across the suite, with the option to override the filters at the command line.
+While it is possible to specify filters as part of suite configuration,
+sometimes you will want to exclude certain scenarios across the suite,
+with the option to override the filters at the command line.
 
-This is achieved by specifying the filter in the `gherkin` configuration:
+This is achieved by specifying the filter in the ``gherkin`` configuration:
 
 .. code-block:: yaml
 
@@ -150,7 +193,7 @@ This is achieved by specifying the filter in the `gherkin` configuration:
             filters:
                 tags: ~@wip
 
-In this instance, scenarios tagged as `@wip` will be ignored unless the CLI command is run with a custom filter, e.g.:
+In this instance, scenarios tagged as ``@wip`` will be ignored unless the CLI command is run with a custom filter, e.g.:
 
 .. code-block:: bash
 
@@ -169,9 +212,11 @@ you want to autoload via ``behat.yml``:
 
     default:
         autoload:
-            '': %paths.base%/app/features/bootstrap
+            '': '%paths.base%/app/features/bootstrap'
 
-If you wish to namespace your features (for example: to be PSR-1 compliant) you will need to add the namespace to the classes and also tell behat where to load them. Here ``contexts`` is an array of classes:
+If you wish to namespace your features (for example: to be PSR-1 compliant)
+you will need to add the namespace to the classes and also tell behat where
+to load them. Here ``contexts`` is an array of classes:
 
 .. code-block:: yaml
 
@@ -180,16 +225,36 @@ If you wish to namespace your features (for example: to be PSR-1 compliant) you 
 
     default:
         autoload:
-            '': %paths.base%/app/features/bootstrap
+            '': '%paths.base%/app/features/bootstrap'
         suites:
             default:
                 contexts: [My\Application\Namespace\Bootstrap\FeatureContext]
 
-.. note::
 
-    Using ``behat.yml`` to autoload will only allow for ``PSR-0``.
-    You can also use ``composer.json`` to autoload, which will also
-    allow for ``PSR-4``
+Using ``behat.yml`` to autoload will only allow for ``PSR-0``.
+You can also use ``composer.json`` to autoload, which will also allow for ``PSR-4``:
+
+.. code-block:: json
+
+    {
+      "autoload-dev": {
+        "psr-4": {
+          "My\\Application\\Namespace\\Bootstrap\\": "app/features/bootstrap"
+        }
+      }
+    }
+
+If you add this to your ``composer.json`` file, then you won't need to specify autoloading in
+your ``behat.yml`` file:
+
+.. code-block:: yaml
+
+    # behat.yml
+
+    default:
+        suites:
+            default:
+                contexts: [My\Application\Namespace\Bootstrap\FeatureContext]
 
 Formatters
 ----------
@@ -214,7 +279,7 @@ Extensions can be configured like this:
     # behat.yml
 
     default:
-    	extensions:
+        extensions:
             Behat\MinkExtension:
                 base_url: http://www.example.com
-            	selenium2: ~
+                selenium2: ~

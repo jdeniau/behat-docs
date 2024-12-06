@@ -280,8 +280,21 @@ The scenario that is actually run is:
       # <left> replaced with 7:
       Then I should have 7 cucumbers
 
+Multiline Arguments
+-------------------
+
+The one line `steps`_ let Behat extract small strings from your steps
+and receive them in your step definitions. However, there are times when you
+want to pass a richer data structure from a step to a step definition.
+
+This is what multiline step arguments are designed for. They are written on
+lines immediately following a step and are passed to the step definition
+method as the last argument.
+
+Multiline step arguments come in two flavours: `tables`_ or `pystrings`_.
+
 Tables
-------
+^^^^^^
 
 Tables as arguments to steps are handy for specifying a larger data set -
 usually as input to a ``Given`` or as expected output from a ``Then``:
@@ -326,21 +339,8 @@ usually as input to a ``Given`` or as expected output from a ``Then``:
     which you can get hash by columns (``TableNode::getHash()`` method) or by
     rows (``TableNode::getRowsHash()``).
 
-Multiline Arguments
--------------------
-
-The one line `steps`_ let Behat extract small strings from your steps
-and receive them in your step definitions. However, there are times when you
-want to pass a richer data structure from a step to a step definition.
-
-This is what multiline step arguments are designed for. They are written on
-lines immediately following a step and are passed to the step definition
-method as the last argument.
-
-Multiline step arguments come in two flavours: `tables`_ or `pystrings`_.
-
 Pystrings
----------
+^^^^^^^^^
 
 Multiline Strings (also known as PyStrings) are useful for specifying a
 larger piece of text. The text should be offset by delimiters consisting of

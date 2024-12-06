@@ -466,7 +466,9 @@ code we could come up with to fulfil our scenario. Something like this:
          */
         public function iShouldHaveProductInTheBasket($count)
         {
-            PHPUnit_Framework_Assert::assertCount(
+            // Normally you would import this class - we are using the fully qualified name
+            // to highlight that Behat does not come with an assertion tool (see note below).
+            \PHPUnit\Framework\Assert::assertCount(
                 intval($count),
                 $this->basket
             );
@@ -477,7 +479,7 @@ code we could come up with to fulfil our scenario. Something like this:
          */
         public function theOverallBasketPriceShouldBePs($price)
         {
-            PHPUnit_Framework_Assert::assertSame(
+            \PHPUnit\Framework\Assert::assertSame(
                 floatval($price),
                 $this->basket->getTotalPrice()
             );
@@ -505,7 +507,7 @@ state of our ``Basket`` object with our expectations using PHPUnit assertions.
 
     .. code-block:: php
 
-        PHPUnit_Framework_Assert::assertCount(
+        \PHPUnit\Framework\Assert::assertCount(
             intval($count),
             $this->basket
         );

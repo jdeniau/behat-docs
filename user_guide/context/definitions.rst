@@ -137,7 +137,7 @@ always use good old regular expressions:
     public function thereAreMonsters($count) {}
 
 And if you want to be able to say things in different ways that are not so
-easily written as a single regular expression, you can write multiple 
+easily written as a single regular expression, you can write multiple
 annotations for the one method:
 
 .. code-block:: php
@@ -149,6 +149,15 @@ annotations for the one method:
     public function thereAreMonsters($count) {}
 
 Behat will call the corresponding method if any of the patterns matches.
+
+.. note::
+
+   Behat uses the ``preg_match()`` function to match these regular expressions
+   to arguments. Special care is needed to make sure that there is only one
+   capturing group for each argument. A expression like ``(?P<property>([\w\s]+))``
+   contains an inner capturing group (``([\w\s]+)``) and this may make some
+   arguments not match correctly. The right expression to use would be
+   ``(?P<property>[\w\s]+)``
 
 Definition Snippets
 -------------------
@@ -702,6 +711,6 @@ via a comma-delimited list of the column headers prefixed with ``table:``:
 
 .. tip::
    Behat provides a :ref:`command line
-   option<user-guide--comand-line-tool--informative-output--print-definitions>`
+   option<user-guide--command-line-tool--informative-output--print-definitions>`
    that allows you to easily browse definitions in order to reuse them or adapt
    them.
