@@ -26,10 +26,10 @@ Reviewdog can handle `two types of input <https://github.com/reviewdog/reviewdog
 -  any stdin, coupled with an "errorformat" (a Vim inspired format that can convert text string to machine-readable errors),
 -  a `"Reviewdog Diagnostic Format" <https://github.com/reviewdog/reviewdog/tree/48b25a0aafb8494e751387e16f729faee9522c46/proto/rdf>`__: a JSON with error data that reviewdog can parse.
 
-In my case, I tried parsing Behat's output with errorformat, but I do not know this language, and the multi-line Behat output with "dots" didn't make it easy.
-So I decided to create a custom formatter for Behat.
+But parsing Behat stdout with errorformat is not that easy, as Behat's output is multi-line, add dots, errorformat can be tricky and might not handle every case (behat has different possible outputs, etc.).
+So We will create a custom formatter for Behat.
 
-This way, I will still have Behat's human-readable stdout, and a JSON file written that reviewdog can understand.
+This way, we will still have Behat's human-readable stdout, and a JSON file written that reviewdog can understand.
 
 Let's dive
 ----------
@@ -51,7 +51,7 @@ A formatter extension requires three things to work:
 Create the extension
 ~~~~~~~~~~~~~~~~~~~~
 
-Any Behat extensions must implement ``Behat\Testwork\ServiceContainer\Extension``. Under the hood, it implements Symfony ``CompilerPass``.
+Any Behat extensions must implement ``Behat\Testwork\ServiceContainer\Extension``.
 It is a way to inject anything you want into Behat's kernel.
 
 In our case, we need to load the "formatter" in Behat's kernel, and tag it as an output formatter.
@@ -63,7 +63,7 @@ This way Behat will allow our extension to be configured as a formatter. You can
 
    declare(strict_types=1);
 
-   namespace JDeniau\BehatReviewdogFormatter;
+   namespace HelloWorld\BehatReviewdogFormatter;
 
    use Behat\Testwork\Output\ServiceContainer\OutputExtension;
    use Behat\Testwork\ServiceContainer\Extension;
@@ -93,7 +93,7 @@ This way Behat will allow our extension to be configured as a formatter. You can
            $formatterDefinition = $container->register(ReviewdogFormatter::class);
 
            // add some arguments that will be called in the constructor.
-           // This isn't required, but in my case I inject Behat's base path (to remove it from the absolute file path later) and the printer.
+           // This isn't required, but in our case we will inject Behat's base path (to remove it from the absolute file path later) and the printer.
            $formatterDefinition->addArgument('%paths.base%');
            $formatterDefinition->addArgument($outputPrinterDefinition);
 
@@ -117,7 +117,7 @@ The formatter will listen to Behat's events, and create output data depending on
 
    <?php
 
-   namespace JDeniau\BehatReviewdogFormatter;
+   namespace HelloWorld\BehatReviewdogFormatter;
 
    use Behat\Behat\EventDispatcher\Event\AfterStepTested;
    use Behat\Behat\EventDispatcher\Event\StepTested;
@@ -155,7 +155,7 @@ The formatter will listen to Behat's events, and create output data depending on
        }
 
        /**
-        * I do not call this, so no need to define an implementation
+        * We do not call this, so no need to define an implementation
         */
        public function getParameter($name) { }
 
@@ -168,7 +168,7 @@ The formatter will listen to Behat's events, and create output data depending on
         *
         * There are a lot of other events that can be found here in the Behat\Testwork\EventDispatcher\Event class
         */
-       public static function getSubscribedEvents()
+       public static function getSubscribedEvents(): array
        {
            return [
                // call the `onBeforeExercise` method on startup
@@ -253,7 +253,7 @@ The last file that we need to implement is the printer. In our case we need a si
 
    <?php
 
-   namespace JDeniau\BehatReviewdogFormatter;
+   namespace HelloWorld\BehatReviewdogFormatter;
 
    use Behat\Testwork\Output\Printer\OutputPrinter;
 
@@ -317,7 +317,7 @@ The last file that we need to implement is the printer. In our case we need a si
        /**
         * Behat can have multiple verbosity levels, you may want to handle this to display more information.
         * These use the Symfony\Component\Console\Output\OutputInterface::VERBOSITY_ constants.
-        * For reviewdog, I do not need that.
+        * For reviewdog, we do not need that.
         */
        public function setOutputVerbosity($level): void { }
 
@@ -405,7 +405,7 @@ You need to add the extension in your Behat configuration file (default is ``beh
 
    default:
      extensions:
-       JDeniau\BehatReviewdogFormatter\ReviewdogFormatterExtension: ~
+       HelloWorld\BehatReviewdogFormatter\ReviewdogFormatterExtension: ~
 
      formatters:
        pretty: true
@@ -426,7 +426,7 @@ For example if you want the pretty formatter by default, but both progress and r
 
    default:
      extensions:
-       JDeniau\BehatReviewdogFormatter\ReviewdogFormatterExtension: ~
+       HelloWorld\BehatReviewdogFormatter\ReviewdogFormatterExtension: ~
 
      formatters:
        pretty: true
@@ -445,7 +445,7 @@ Enjoy!
 
 That's how you can write a basic custom Behat formatter!
 
-If you have much more complex logic, and you need the formatter to be more dynamic, Behat do provide a FormatterFactory interface.
+If you have much more complex logic, and you need the formatter to be more dynamic, Behat provides a FormatterFactory interface.
 You can see usage examples directly in `Behat's codebase <https://github.com/Behat/Behat/tree/2a3832d9cb853a794af3a576f9e524ae460f3340/src/Behat/Behat/Output/ServiceContainer/Formatter>`__,
 but in a lot of cases, something like this example should work.
 
@@ -455,7 +455,7 @@ Want to use reviewdog and the custom formatter yourself?
 If you want to use the reviewdog custom formatter, you can find it on github: https://github.com/jdeniau/behat-reviewdog-formatter
 
 There are other Behat custom formatters in the wild, especially `BehatHtmlFormatterPlugin <https://github.com/dutchiexl/BehatHtmlFormatterPlugin>`__.
-I did not test that, but it helped me understand how the Behat formatter system works, and it can output an HTML file that can help you understand why your CI is failing.
+Reading this formatter might help you understand how the Behat formatter system works, and it can output an HTML file that can help you understand why your CI is failing.
 
 
 About the author
